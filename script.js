@@ -27,7 +27,10 @@ function getLimitKey(row) {
 function getRate(type, value, data, column) {
   const candidates = data.filter(r => r["Тип операции"]?.trim() === type);
   for (let row of candidates) {
-    const limitKey = getLimitKey(row);
+    const rawLimit = row[limitKey];
+const limit = typeof rawLimit === "string" 
+  ? parseFloat(rawLimit.replace(/[^\d.,]/g, "").replace(",", "."))
+  : parseFloat(rawLimit);
     const limit = parseFloat((row[limitKey] || "").replace(/[^\d.,]/g, "").replace(",", "."));
     const rate = parseFloat(row[column]);
     if (!isNaN(limit) && value <= limit && !isNaN(rate)) {
